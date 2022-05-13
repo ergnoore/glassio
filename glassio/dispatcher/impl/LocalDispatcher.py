@@ -1,0 +1,121 @@
+from inspect import iscoroutinefunction
+from typing import Any
+from typing import Mapping
+from typing import MutableMapping
+from typing import Optional
+from typing import Sequence
+from typing import Type
+from typing import TypeVar
+
+from glassio.logger import ILogger
+
+from ..core import DispatcherException
+from ..core import FunctionNotFoundException
+from ..core import IDispatcher
+from ..core import IFunction
+
+
+__all__ = [
+    "LocalDispatcher"
+]
+
+
+F = TypeVar('F', bound=IFunction)
+
+
+class LocalDispatcher(IDispatcher):
+
+    __slots__ = (
+        "__functions",
+        "__logger",
+    )
+
+    def __init__(self, logger: ILogger) -> None:
+        self.__functions: MutableMapping[Type[F], F] = {}
+        self.__logger = logger
+
+    def add_function(
+        self,
+        function_type: Type[F],
+        function: F,
+        forced: bool = False,
+    ) -> None:
+        if function_type in self.__functions.keys() and not forced:
+            raise DispatcherException(
+                "The function has already been added."
+            )
+
+        if not isinstance(function, function_type):
+            raise DispatcherException(
+                "The function does not match the specified function_type."
+            )
+
+        if not issubclass(function_type, IFunction):
+            raise DispatcherException(
+                "The specified function_type is not an inheritor of IFunction."
+            )
+
+        if not iscoroutinefunction(function.__call__):
+            raise DispatcherException(
+                "The function must be asynchronous."
+            )
+
+        self.__functions[function_type] = function
+
+    def delete_function(
+        self,
+        function_type: Type[F]
+    ) -> None:
+        try:
+            self.__functions.pop(function_type)
+        except KeyError:
+            raise FunctionNotFoundException(
+                f"Unable to delete a non-existent function: `{function_type}`."
+            )
+
+    def __get_function(self, function_type: Type[F]) -> F:
+        try:
+            return self.__functions[function_type]
+        except KeyError:
+            raise FunctionNotFoundException(
+                f"Unable to get a non-existent function: `{function_type}`."
+            )
+
+    def get_function(self, function_type: Type[F]) -> F:
+        logger = self.__logger
+        get_function = self.__get_function
+
+        class FunctionProxy(function_type):
+
+            __slots__ = ()
+
+            async def __call__(self, *args, **kwargs):
+                nonlocal function_type, logger
+                function = get_function(function_type)
+                try:
+                    result = await function(*args, **kwargs)
+                except Exception as exc:
+                    await logger.debug(
+                        f"Dispatcher: call function: `{type(function)}`, args: {args}, kwargs: {kwargs}, "
+                        f"exception: `{exc!r}`."
+                    )
+                    raise exc
+                else:
+                    await logger.debug(
+                        f"Dispatcher: call function: `{type(function)}`, args: {args}, kwargs: {kwargs}, "
+                        f"result: `{result!r}`."
+                    )
+                    return result
+
+        return FunctionProxy()
+
+    async def call_function(
+        self,
+        function_type: Type[F],
+        args: Optional[Sequence[Any]] = None,
+        kwargs: Optional[Mapping[str, Any]] = None
+    ) -> Any:
+        args = args or ()
+        kwargs = kwargs or {}
+        function = self.get_function(function_type)
+        return await function(*args, **kwargs)
