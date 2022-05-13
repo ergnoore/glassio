@@ -1,3 +1,4 @@
+from setuptools import find_packages
 from setuptools import setup
 
 
@@ -19,9 +20,7 @@ test_requires = [
 setup(
     name='glassio',
     version='0.0.1',
-    packages=[
-        'glassio',
-    ],
+    packages=find_packages(exclude=["tests"]),
     install_requires=install_requires,
     tests_require=test_requires,
     url='https://github.com/ergnoore/glassio',
