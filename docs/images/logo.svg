@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   viewBox="0 0 256 255.99998"
+   version="1.1"
+   id="svg_null"
+   sodipodi:docname="logo.svg"
+   inkscape:version="1.1.2 (0a00cf5339, 2022-02-04, custom)"
+   width="256"
+   height="256"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs890" />
+  <sodipodi:namedview
+     id="namedview888"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     showgrid="false"
+     inkscape:zoom="1.8848815"
+     inkscape:cx="171.36356"
+     inkscape:cy="205.58322"
+     inkscape:window-width="1920"
+     inkscape:window-height="1055"
+     inkscape:window-x="0"
+     inkscape:window-y="25"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="background"
+     units="px"
+     width="256mm"
+     inkscape:document-units="mm"
+     fit-margin-top="0"
+     fit-margin-left="0"
+     fit-margin-right="0"
+     fit-margin-bottom="0"
+     scale-x="4.57953"
+     height="256.00003px" />
+  <g
+     inkscape:groupmode="layer"
+     id="background"
+     inkscape:label="Backgroung"
+     style="display:inline;opacity:1">
+    <g
+       id="g124322">
+      <rect
+         id="background.accent"
+         fill="#4b6982"
+         x="-209.45009"
+         y="-26.240656"
+         width="160"
+         height="160"
+         style="fill:#3b4252;fill-opacity:1"
+         transform="matrix(1.6,0,0,1.6,335.12014,41.985049)" />
+    </g>
+    <path
+       d="M 183.07151,219.46073"
+       style="display:inline;fill:#b4ffd8;stroke-width:1"
+       id="path116646" />
+    <ellipse
+       style="opacity:0;fill:#8fbcbb;fill-opacity:1;stroke:#4b6982;stroke-opacity:1"
+       id="path116128"
+       cx="-56.544331"
+       cy="224.51195"
+       rx="13.320473"
+       ry="10.169461" />
+    <path
+       style="opacity:0;fill:#8fbcbb;fill-opacity:1;stroke:#4b6982;stroke-opacity:1"
+       id="path116130"
+       sodipodi:type="arc"
+       sodipodi:cx="-64.865578"
+       sodipodi:cy="215.55954"
+       sodipodi:rx="2.0245011"
+       sodipodi:ry="112.87994"
+       sodipodi:start="0"
+       sodipodi:end="6.2829713"
+       sodipodi:arc-type="slice"
+       d="m -62.841077,215.55954 a 2.0245011,112.87994 0 0 1 -2.024392,112.87994 2.0245011,112.87994 0 0 1 -2.02461,-112.86786 2.0245011,112.87994 0 0 1 2.024176,-112.89201 2.0245011,112.87994 0 0 1 2.024826,112.85577 l -2.024501,0.0242 z" />
+  </g>
+  <g
+     inkscape:groupmode="layer"
+     id="logo"
+     inkscape:label="Logo"
+     style="display:inline;opacity:1">
+    <g
+       id="group"
+       transform="matrix(1.609375,0,0,1.6,226.17712,78.962483)"
+       style="opacity:1">
+      <rect
+         id="Rectangle-14"
+         x="0"
+         y="0"
+         width="128"
+         height="22"
+         style="opacity:0" />
+      <text
+         id="headerText.primary"
+         font-family="'Anonymous Pro'"
+         font-size="18px"
+         font-weight="700"
+         letter-spacing="0.82477"
+         fill="#b4ffd8"
+         data-text-alignment="C"
+         font-style="normal"
+         style="font-size:20.3647px;text-align:center;text-anchor:middle;opacity:1;stroke-width:1.01823"
+         x="-130.00589"
+         y="11.772953"
+         transform="scale(0.97629221,1.0242835)"><tspan
+           x="-103.01843"
+           y="29.082932"
+           id="tspan877"
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:20.3647px;font-family:'Anonymous Pro';-inkscape-font-specification:'Anonymous Pro';text-align:start;text-anchor:start;stroke-width:1.01823"><tspan
+             style="text-align:start;text-anchor:start;fill:#88c0d0;fill-opacity:1;stroke-width:1.01823"
+             id="tspan107501">Glass</tspan><tspan
+             style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:20.3647px;font-family:'Anonymous Pro';-inkscape-font-specification:'Anonymous Pro Bold';text-align:start;text-anchor:start;fill:#bf616a;fill-opacity:1;stroke-width:1.01823"
+             id="tspan5058">IO</tspan></tspan></text>
+    </g>
+    <path
+       d="m 25,131 c 68.666661,0 137.33332,0 206,0 v 6 H 25 Z"
+       id="shape.primary"
+       fill="#b4ffd8"
+       sodipodi:nodetypes="ccccc"
+       style="fill:#8fbcbb;fill-opacity:1;stroke:none;stroke-width:1.79409" />
+    <rect
+       style="opacity:1;fill:#8fbcbb;fill-opacity:1;stroke:none;stroke-width:0.729677;stroke-opacity:1"
+       id="rect59614-9"
+       width="75"
+       height="3"
+       x="151"
+       y="140" />
+    <rect
+       style="opacity:1;fill:#8fbcbb;fill-opacity:1;stroke:none;stroke-width:0.729677;stroke-opacity:1"
+       id="rect59614"
+       width="75"
+       height="3"
+       x="30"
+       y="140" />
+    <g
+       id="g124963"
+       transform="translate(116,138.5)"
+       style="display:inline;opacity:1">
+      <path
+         style="display:inline;opacity:1;fill:#d8dee9;fill-opacity:1;stroke:none;stroke-opacity:1"
+         id="path117673-0-1"
+         sodipodi:type="arc"
+         sodipodi:cx="21"
+         sodipodi:cy="3"
+         sodipodi:rx="3"
+         sodipodi:ry="3"
+         sodipodi:start="0"
+         sodipodi:end="6.2829759"
+         sodipodi:arc-type="slice"
+         d="M 24,3 A 3,3 0 0 1 21.000157,6 3,3 0 0 1 18,3.0003141 3,3 0 0 1 20.999529,3.6999591e-8 3,3 0 0 1 24,2.9993718 L 21,3 Z" />
+      <path
+         style="display:inline;opacity:1;fill:#d8dee9;fill-opacity:1;stroke:none;stroke-opacity:1"
+         id="path117673-0-6"
+         sodipodi:type="arc"
+         sodipodi:cx="12"
+         sodipodi:cy="3"
+         sodipodi:rx="3"
+         sodipodi:ry="3"
+         sodipodi:start="0"
+         sodipodi:end="6.2829759"
+         sodipodi:arc-type="slice"
+         d="M 15,3 A 3,3 0 0 1 12.000157,6 3,3 0 0 1 9,3.0003141 3,3 0 0 1 11.999529,3.6999591e-8 3,3 0 0 1 15,2.9993718 L 12,3 Z" />
+      <path
+         style="display:inline;opacity:1;fill:#d8dee9;fill-opacity:1;stroke:none;stroke-opacity:1"
+         id="path117673-0"
+         sodipodi:type="arc"
+         sodipodi:cx="3"
+         sodipodi:cy="3"
+         sodipodi:rx="3"
+         sodipodi:ry="3"
+         sodipodi:start="0"
+         sodipodi:end="6.2829759"
+         sodipodi:arc-type="slice"
+         d="M 6,3 A 3,3 0 0 1 3.0001571,6 3,3 0 0 1 1.6444263e-8,3.0003141 3,3 0 0 1 2.9995288,3.6999591e-8 3,3 0 0 1 5.9999999,2.9993718 L 3,3 Z" />
+    </g>
+  </g>
+  <g
+     id="root"
+     stroke="none"
+     stroke-width="1"
+     fill="none"
+     fill-rule="evenodd"
+     transform="matrix(1.6,0,0,1.6,335.12014,41.985049)">
+    <rect
+       id="rect195812"
+       x="68"
+       y="85"
+       width="24"
+       height="24"
+       display="none"
+       fill="#b4ffd8" />
+  </g>
+</svg>
