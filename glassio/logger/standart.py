@@ -2,6 +2,7 @@ from asyncio import AbstractEventLoop
 from asyncio import get_event_loop
 from asyncio import iscoroutine
 
+from contextvars import copy_context
 import logging
 from typing import Optional
 
@@ -63,9 +64,10 @@ class StandardLogger(AbstractLogger):
 
         else:
             return
+        current_context = copy_context()
 
         def log() -> None:
-            self.__logger.log(self.__convert_level(level), message, exc_info=exception)
+            current_context.run(self.__logger.log, self.__convert_level(level), message, exc_info=exception)
 
         return await self.__event_loop.run_in_executor(None, log)
 

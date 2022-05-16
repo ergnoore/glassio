@@ -3,7 +3,10 @@ import logging
 
 import pytest
 
+from glassio.context import get_context
+from glassio.context import set_context
 from glassio.logger import Level
+from glassio.logger import StandardLogger
 from glassio.logger import StandardLoggerFactory
 
 
@@ -28,6 +31,36 @@ async def test_log() -> None:
     await logger.deinitialize()
 
     assert "INFO Test: Message." in stream.getvalue()
+
+
+@pytest.mark.asyncio
+async def test_saving_context() -> None:
+    stream = StringIO()
+    root_logger = logging.getLogger("TestSavingContext")
+    root_logger.setLevel(logging.DEBUG)
+
+    root_handler = logging.StreamHandler(stream)
+    root_handler.setFormatter(
+        logging.Formatter("%(levelname)s %(name)s: %(message)s %(my_value)s")
+    )
+
+    class ContextFilter(logging.Filter):
+
+        def filter(self, record):
+            context = get_context()
+            record.my_value = context["my_value"]
+            return True
+
+    root_logger.addFilter(ContextFilter())
+    root_logger.addHandler(root_handler)
+    logger = StandardLogger(root_logger)
+
+    set_context({"my_value": "foo"})
+    await logger.initialize()
+    await logger.log(Level.INFO, "Message.")
+    await logger.deinitialize()
+
+    assert "INFO TestSavingContext: Message. foo" in stream.getvalue()
 
 
 @pytest.mark.asyncio

@@ -19,7 +19,7 @@ test_requires = [
 
 setup(
     name='glassio',
-    version='0.0.2',
+    version='0.0.3',
     packages=find_packages(exclude=["tests"]),
     install_requires=install_requires,
     tests_require=test_requires,
