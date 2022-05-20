@@ -13,13 +13,12 @@ test_requires = [
     *install_requires,
     "pytest==7.1.1",
     "pytest-asyncio==0.18.3",
-    "pytest-rabbitmq==2.2.1",
 ]
 
 
 setup(
     name='glassio',
-    version='0.0.3',
+    version='0.0.4',
     packages=find_packages(exclude=["tests"]),
     install_requires=install_requires,
     tests_require=test_requires,
