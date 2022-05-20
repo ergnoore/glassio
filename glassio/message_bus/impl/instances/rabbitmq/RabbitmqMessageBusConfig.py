@@ -13,7 +13,7 @@ __all__ = [
 
 
 class SettingsForPublishing(BaseModel):
-    exchange_name: Optional[str] = None
+    exchange_name: str
     exchange_type: Literal["fanout", "direct", "topics", "headers"] = "direct"
     exchange_durable: bool = False
     exchange_passive: bool = False
@@ -21,7 +21,7 @@ class SettingsForPublishing(BaseModel):
     exchange_no_wait: bool = False
     exchange_arguments: Mapping[str, str] = {}
 
-    routing_key: Optional[str] = None
+    routing_key: str
 
     queue_name: Optional[str] = None
     queue_durable: bool = True
@@ -31,10 +31,10 @@ class SettingsForPublishing(BaseModel):
 
 
 class SettingsForConsuming(BaseModel):
-    queue_name: Optional[str] = None
+    queue_name: str
 
 
 class RabbitmqMessageBusConfig(BaseModel):
     rabbitmq: RabbitmqConfig = RabbitmqConfig()
-    settings_for_publishing: SettingsForPublishing
-    settings_for_consuming: SettingsForConsuming
+    settings_for_publishing: Optional[SettingsForPublishing] = None
+    settings_for_consuming: Optional[SettingsForConsuming] = None

@@ -84,16 +84,8 @@ class RabbitmqMessageBus(AbstractInitializableComponent, InitializableMessageBus
 
         await self.__connect()
 
-        if self.__config.settings_for_publishing.exchange_name is None:
+        if self.__config.settings_for_publishing is None:
             return
-
-        await self.__channel.queue_declare(
-            queue_name=self.__config.settings_for_publishing.queue_name,
-            durable=self.__config.settings_for_publishing.queue_durable,
-            exclusive=self.__config.settings_for_publishing.queue_exclusive,
-            auto_delete=self.__config.settings_for_publishing.queue_auto_delete,
-            arguments=self.__config.settings_for_publishing.queue_arguments,
-        )
 
         await self.__channel.exchange_declare(
             exchange_name=self.__config.settings_for_publishing.exchange_name,
@@ -105,11 +97,20 @@ class RabbitmqMessageBus(AbstractInitializableComponent, InitializableMessageBus
             arguments=self.__config.settings_for_publishing.exchange_arguments,
         )
 
-        await self.__channel.queue_bind(
-            queue_name=self.__config.settings_for_publishing.queue_name,
-            exchange_name=self.__config.settings_for_publishing.exchange_name,
-            routing_key=self.__config.settings_for_publishing.routing_key,
-        )
+        if self.__config.settings_for_publishing.queue_name is not None:
+            await self.__channel.queue_declare(
+                queue_name=self.__config.settings_for_publishing.queue_name,
+                durable=self.__config.settings_for_publishing.queue_durable,
+                exclusive=self.__config.settings_for_publishing.queue_exclusive,
+                auto_delete=self.__config.settings_for_publishing.queue_auto_delete,
+                arguments=self.__config.settings_for_publishing.queue_arguments,
+            )
+
+            await self.__channel.queue_bind(
+                queue_name=self.__config.settings_for_publishing.queue_name,
+                exchange_name=self.__config.settings_for_publishing.exchange_name,
+                routing_key=self.__config.settings_for_publishing.routing_key,
+            )
 
     async def __disconnect(self) -> None:
         if self.__protocol is not None:
@@ -156,9 +157,9 @@ class RabbitmqMessageBus(AbstractInitializableComponent, InitializableMessageBus
     @required_state(InitializedState)
     async def add_consumer(self, consumer: IConsumer) -> None:
 
-        if self.__config.settings_for_consuming.queue_name is None:
+        if self.__config.settings_for_consuming is None:
             raise MessageBusException(
-                "To consume messages, you need to specify `queue_name`."
+                "To consume messages, you need to specify `settings_for_consuming`."
             )
 
         async def consumer_wrapper(
