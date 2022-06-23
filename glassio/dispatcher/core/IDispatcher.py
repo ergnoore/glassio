@@ -6,6 +6,7 @@ from typing import Type
 from typing import TypeVar
 
 from .functions import IFunction
+from .decorators import IFunctionDecorator
 
 
 __all__ = [
@@ -40,4 +41,11 @@ class IDispatcher:
         args: Optional[Sequence[Any]] = None,
         kwargs: Optional[Mapping[str, Any]] = None,
     ) -> Any:
+        raise NotImplementedError()
+
+    def add_function_decorator(
+        self,
+        function: Type[IFunction],
+        decorator: IFunctionDecorator,
+    ) -> None:
         raise NotImplementedError()

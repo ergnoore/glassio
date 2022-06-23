@@ -6,13 +6,14 @@ from typing import Optional
 from typing import Sequence
 from typing import Type
 from typing import TypeVar
-
+from collections import defaultdict
 from glassio.logger import ILogger
-
+from typing import MutableSequence
 from ..core import DispatcherException
 from ..core import FunctionNotFoundException
 from ..core import IDispatcher
 from ..core import IFunction
+from ..core import IFunctionDecorator
 
 
 __all__ = [
@@ -27,11 +28,13 @@ class LocalDispatcher(IDispatcher):
 
     __slots__ = (
         "__functions",
+        "__function_decorators",
         "__logger",
     )
 
     def __init__(self, logger: ILogger) -> None:
         self.__functions: MutableMapping[Type[F], F] = {}
+        self.__function_decorators: MutableMapping[Type[F], MutableSequence[IFunctionDecorator[F]]] = defaultdict(list)
         self.__logger = logger
 
     def add_function(
@@ -83,6 +86,7 @@ class LocalDispatcher(IDispatcher):
 
     def get_function(self, function_type: Type[F]) -> F:
         logger = self.__logger
+        function_decorators = self.__function_decorators
         get_function = self.__get_function
 
         class FunctionProxy(function_type):
@@ -90,8 +94,12 @@ class LocalDispatcher(IDispatcher):
             __slots__ = ()
 
             async def __call__(self, *args, **kwargs):
-                nonlocal function_type, logger
+                nonlocal function_type, logger, function_decorators, get_function
+
                 function = get_function(function_type)
+                for decorator in function_decorators[function_type]:
+                    function = decorator(function)
+
                 try:
                     result = await function(*args, **kwargs)
                 except Exception as exc:
@@ -119,3 +127,17 @@ class LocalDispatcher(IDispatcher):
         kwargs = kwargs or {}
         function = self.get_function(function_type)
         return await function(*args, **kwargs)
+
+    def add_function_decorator(
+        self,
+        function: Type[IFunction],
+        decorator: IFunctionDecorator,
+    ) -> None:
+        self.__function_decorators[function].append(decorator)
+
+    def delete_function_decorator(
+        self,
+        function: Type[IFunction],
+        decorator: IFunctionDecorator,
+    ) -> None:
+        self.__function_decorators[function].remove(decorator)
