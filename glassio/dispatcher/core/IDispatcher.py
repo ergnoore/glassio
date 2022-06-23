@@ -49,3 +49,10 @@ class IDispatcher:
         decorator: IFunctionDecorator,
     ) -> None:
         raise NotImplementedError()
+
+    def delete_function_decorator(
+        self,
+        function: Type[IFunction],
+        decorator: IFunctionDecorator,
+    ) -> None:
+        raise NotImplementedError()

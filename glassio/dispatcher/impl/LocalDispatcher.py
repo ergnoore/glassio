@@ -1,14 +1,17 @@
+from collections import defaultdict
 from inspect import iscoroutinefunction
+
 from typing import Any
 from typing import Mapping
 from typing import MutableMapping
+from typing import MutableSequence
 from typing import Optional
 from typing import Sequence
 from typing import Type
 from typing import TypeVar
-from collections import defaultdict
+
 from glassio.logger import ILogger
-from typing import MutableSequence
+
 from ..core import DispatcherException
 from ..core import FunctionNotFoundException
 from ..core import IDispatcher

@@ -123,3 +123,31 @@ async def test_adding_decorator(dispatcher) -> None:
     result = await dispatcher.call_function(MyFunction)
 
     assert result == "bar_foo_bazz"
+
+
+@pytest.mark.asyncio
+async def test_deleting_decorator(dispatcher) -> None:
+
+    class FunctionDecorator(IFunctionDecorator[MyFunction]):
+
+        def __call__(self, function: F) -> IFunction:
+
+            class Wrapper(IFunction):
+
+                async def __call__(self, *args: Sequence[Any], **kwargs: Mapping[str, Any]):
+                    result = "bar_"
+                    result += await function(*args, **kwargs)
+                    return result + "_bazz"
+
+            return Wrapper()
+
+    dispatcher.add_function(MyFunction, MyFunctionImpl())
+    decorator = FunctionDecorator()
+    dispatcher.add_function_decorator(MyFunction, decorator)
+
+    result = await dispatcher.call_function(MyFunction)
+    assert result == "bar_foo_bazz"
+
+    dispatcher.delete_function_decorator(MyFunction, decorator)
+    result = await dispatcher.call_function(MyFunction)
+    assert result == "foo"
