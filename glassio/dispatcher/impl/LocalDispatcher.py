@@ -143,4 +143,9 @@ class LocalDispatcher(IDispatcher):
         function: Type[IFunction],
         decorator: IFunctionDecorator,
     ) -> None:
-        self.__function_decorators[function].remove(decorator)
+        try:
+            self.__function_decorators[function].remove(decorator)
+        except ValueError:
+            raise DispatcherException(
+                "There is no decorator: `decorator` for the function: `function`."
+            )

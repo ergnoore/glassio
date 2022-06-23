@@ -1,4 +1,6 @@
-from typing import Any, Mapping, Sequence
+from typing import Any
+from typing import Mapping
+from typing import Sequence
 
 import pytest
 import pytest_asyncio
@@ -7,8 +9,6 @@ from glassio.dispatcher import DispatcherException
 from glassio.dispatcher import FunctionNotFoundException
 from glassio.dispatcher import IFunction
 from glassio.dispatcher import IFunctionDecorator
-from glassio.dispatcher.core.decorators import F
-from glassio.dispatcher.core.functions import T
 
 
 class MyFunction(IFunction[str]):
@@ -106,13 +106,13 @@ async def test_adding_decorator(dispatcher) -> None:
 
     class FunctionDecorator(IFunctionDecorator[MyFunction]):
 
-        def __call__(self, function: F) -> IFunction:
+        def __call__(self, function: MyFunction) -> IFunction:
 
             class Wrapper(IFunction):
 
-                async def __call__(self, *args: Sequence[Any], **kwargs: Mapping[str, Any]):
+                async def __call__(self):
                     result = "bar_"
-                    result += await function(*args, **kwargs)
+                    result += await function()
                     return result + "_bazz"
 
             return Wrapper()
@@ -130,24 +130,32 @@ async def test_deleting_decorator(dispatcher) -> None:
 
     class FunctionDecorator(IFunctionDecorator[MyFunction]):
 
-        def __call__(self, function: F) -> IFunction:
+        def __call__(self, function: MyFunction) -> IFunction:
 
             class Wrapper(IFunction):
 
                 async def __call__(self, *args: Sequence[Any], **kwargs: Mapping[str, Any]):
-                    result = "bar_"
-                    result += await function(*args, **kwargs)
-                    return result + "_bazz"
+                    raise NotImplementedError()
 
             return Wrapper()
 
     dispatcher.add_function(MyFunction, MyFunctionImpl())
     decorator = FunctionDecorator()
+
     dispatcher.add_function_decorator(MyFunction, decorator)
-
-    result = await dispatcher.call_function(MyFunction)
-    assert result == "bar_foo_bazz"
-
     dispatcher.delete_function_decorator(MyFunction, decorator)
+
     result = await dispatcher.call_function(MyFunction)
     assert result == "foo"
+
+
+@pytest.mark.asyncio
+async def test_deleting_nonexistent_decorator(dispatcher) -> None:
+
+    class FunctionDecorator(IFunctionDecorator[MyFunction]):
+
+        def __call__(self, function: MyFunction) -> IFunction:
+            raise NotImplementedError()
+
+    with pytest.raises(DispatcherException):
+        dispatcher.delete_function_decorator(MyFunction, FunctionDecorator())
