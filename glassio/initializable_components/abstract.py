@@ -87,9 +87,11 @@ class AbstractInitializableComponent(InitializableComponent):
     __slots__ = (
         "__state_factory",
         "__state_machine",
+        "__name",
     )
 
-    def __init__(self) -> None:
+    def __init__(self, name: Optional[str] = None) -> None:
+        self.__name = name or self.__class__.__name__
         self.__state_factory = StandardStateFactory(
             initialize_task=self._initialize,
             deinitialize_task=self._deinitialize,
@@ -141,3 +143,6 @@ class AbstractInitializableComponent(InitializableComponent):
     async def _deinitialize(self, exception: Optional[Exception] = None) -> None:
         """Custom deinitialization code."""
         pass
+
+    def __repr__(self) -> str:
+        return self.__name
