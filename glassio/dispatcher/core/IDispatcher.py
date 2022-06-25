@@ -4,9 +4,10 @@ from typing import Optional
 from typing import Sequence
 from typing import Type
 from typing import TypeVar
+from typing import Collection
 
-from .functions import IFunction
 from .decorators import IFunctionDecorator
+from .functions import IFunction
 
 
 __all__ = [
@@ -33,6 +34,9 @@ class IDispatcher:
         raise NotImplementedError()
 
     def get_function(self, function_type: Type[F]) -> F:
+        raise NotImplementedError()
+
+    def get_function_types(self) -> Collection[Type[IFunction]]:
         raise NotImplementedError()
 
     async def call_function(

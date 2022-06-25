@@ -2,6 +2,7 @@ from collections import defaultdict
 from inspect import iscoroutinefunction
 
 from typing import Any
+from typing import Collection
 from typing import Mapping
 from typing import MutableMapping
 from typing import MutableSequence
@@ -11,7 +12,6 @@ from typing import Type
 from typing import TypeVar
 
 from glassio.logger import ILogger
-
 from ..core import DispatcherException
 from ..core import FunctionNotFoundException
 from ..core import IDispatcher
@@ -120,6 +120,9 @@ class LocalDispatcher(IDispatcher):
 
         return FunctionProxy()
 
+    def get_function_types(self) -> Collection[Type[IFunction]]:
+        return self.__functions.keys()
+
     async def call_function(
         self,
         function_type: Type[F],
@@ -147,5 +150,5 @@ class LocalDispatcher(IDispatcher):
             self.__function_decorators[function].remove(decorator)
         except ValueError:
             raise DispatcherException(
-                "There is no decorator: `decorator` for the function: `function`."
+                f"There is no decorator: `{decorator}` for the function: `{function}`."
             )
