@@ -18,8 +18,8 @@ test_requires = [
 
 setup(
     name='glassio',
-    version='0.0.4',
-    packages=find_packages(exclude=["tests"]),
+    version='0.0.5',
+    packages=find_packages(exclude=["tests", "docs"]),
     install_requires=install_requires,
     tests_require=test_requires,
     url='https://github.com/ergnoore/glassio',
