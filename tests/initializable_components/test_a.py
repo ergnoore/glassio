@@ -1,5 +1,6 @@
 from glassio.initializable_components.initializers.graph.Graph import Graph
-from glassio.initializable_components.initializers.graph.utils import is_cyclic
+from glassio.initializable_components.initializers.graph.utils import get_cycle
+from glassio.initializable_components.initializers.graph.utils import topological_sort
 
 
 def test_cyclick() -> None:
@@ -9,5 +10,5 @@ def test_cyclick() -> None:
         "B": {"C", "A"},
         "C": {"D", "E", "F"}
     }
-
-    assert is_cyclic(graph)
+    print("CCCCCCC", get_cycle(graph))
+    print("CCCCCCCa", topological_sort(graph))

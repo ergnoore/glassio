@@ -1,5 +1,8 @@
 from typing import TypeVar, Optional, Any, Collection, Sequence, Mapping, List, Set, Dict, AbstractSet
 from .Graph import Graph
+from collections import defaultdict
+from typing import MutableSequence
+from typing import MutableMapping
 
 
 __all__ = [
@@ -12,136 +15,76 @@ T = TypeVar('T')
 
 def get_vertexes(graph: Graph[T]) -> AbstractSet[T]:
     vertexes = set(graph.keys())
-    vertexes.update(graph.values())
+    vertexes.update(*graph.values())
     return vertexes
 
 
-def is_cyclic(graph: Graph) -> bool:
+def normalize_graph(graph: Graph[T]) -> Graph[T]:
+    normalized_graph = defaultdict(set)
+    normalized_graph.update(graph)
+    return normalized_graph
 
-    used_vertex = set()
 
-    def dfs(vertex: T):  # function for dfs
-        if vertex in used_vertex:
-            return
-        used_vertex.add(vertex)
+def reverse_graph(graph: Graph[T]) -> Graph[T]:
+    return {vv: k for k, v in graph.items() for vv in v}
+
+
+def get_cycle(graph: Graph[T]) -> Sequence[T]:
+
+    normalized_graph = normalize_graph(graph)
+    used_vertexes = set()
+    cycle: MutableSequence[T] = []
+
+    def dfs(vertex: T) -> None:
+        if vertex in used_vertexes:
+            raise Exception("Cycle found.")
+
+        cycle.append(vertex)
+        used_vertexes.add(vertex)
+
+        for child_vertex in normalized_graph[vertex]:
+            dfs(child_vertex)
+
+        cycle.pop()
+
+    for root in get_vertexes(graph):
+        used_vertexes.clear()
+        cycle.clear()
+
         try:
-            for neighbour in graph[vertex]:
-                dfs(neighbour)
-        except:
-            pass
-    first = tuple(graph.keys())[0]
-    dfs(first)
+            dfs(root)
+        except Exception:  # Cycle found.
+            return cycle
 
-    return len(used_vertex) == len(get_vertexes(graph))
+    raise Exception("Cycle not found.")
 
-# def get_nodes(graph: Graph[T]) -> Collection[T]:
-#     nodes: Set[T] = set()
-#     for k, v in graph.items():
-#         nodes.add(k)
-#         for i in v:
-#             nodes.add(i)
-#     return nodes
-#
-#
-# def copy_graph(graph: Graph[T]) -> MutableGraph[T]:
-#     return {k: set(v) for k, v in graph.items()}
-#
-#
-# def copy_graph_without_edges(graph: Graph[T]) -> MutableGraph[T]:
-#     return {node: set() for node in get_nodes(graph)}
-#
-#
-# def normalize_graph(graph: Graph[T]) -> MutableGraph[T]:
-#     graph_copy = copy_graph_without_edges(graph)
-#     for k, v in graph.items():
-#         graph_copy[k].update(v)
-#     return graph_copy
-#
-#
-# def reverse_graph(graph: Graph[T]) -> MutableGraph[T]:
-#     reversed_graph = copy_graph_without_edges(graph)
-#     for k, v in graph.items():
-#         for i in v:
-#             reversed_graph[i].add(k)
-#     return reversed_graph
-#
-#
-# def find_cycle(graph: Graph[T]) -> Optional[Sequence[T]]:
-#     def helper(node: T) -> Optional[Sequence[T]]:
-#         if node in visited:
-#             return None
-#         if node in current_visited:
-#             return path[path.index(node):]
-#         current_visited.add(node)
-#         path.append(node)
-#         try:
-#             child_nodes = graph[node]
-#         except KeyError:
-#             return None
-#         else:
-#             for child_node in child_nodes:
-#                 cycle = helper(child_node)
-#                 if cycle:
-#                     return cycle
-#         finally:
-#             visited.add(node)
-#             current_visited.remove(node)
-#             path.pop()
-#
-#     visited: Set[T] = set()
-#     current_visited: Set[T] = set()
-#     path: List[T] = []
-#     for node in graph:
-#         cycle = helper(node)
-#         if cycle:
-#             return cycle
-#
-#
-# class CycleGraphException(Exception):
-#     def __init__(self, cycle: Sequence, *args: Any) -> None:
-#         super().__init__(cycle, *args)
-#
-#     @property
-#     def cycle(self) -> Sequence:
-#         return self.args[0]
-#
-#
-# def check_cycle(graph: Graph) -> None:
-#     cycle = find_cycle(graph)
-#     if cycle:
-#         raise CycleGraphException(cycle)
-#
-#
-# def topological_sort(graph: Graph[T]) -> Sequence[T]:
-#     def helper(node: T) -> Optional[Sequence[T]]:
-#         if node in visited:
-#             return None
-#         if node in current_visited:
-#             return path[path.index(node):]
-#         current_visited.add(node)
-#         path.append(node)
-#         try:
-#             parent_nodes = reversed_graph[node]
-#         except KeyError:
-#             return None
-#         else:
-#             for parent_node in parent_nodes:
-#                 cycle = helper(parent_node)
-#                 if cycle:
-#                     return cycle
-#         finally:
-#             visited.add(node)
-#             current_visited.remove(node)
-#             path.pop()
-#             sorted_nodes.append(node)
-#
-#     reversed_graph = reverse_graph(graph)
-#     visited: Set[T] = set()
-#     current_visited: Set[T] = set()
-#     path: List[T] = []
-#     sorted_nodes: List[T] = []
-#     for node in reversed_graph:
-#         cycle = helper(node)
-#         if cycle:
-#             raise CycleGraphException(cycle[::-1])
-#     return sorted_nodes[::-1]
+
+def topological_sort(graph: Graph[T]) -> Sequence[T]:
+
+    try:
+        get_cycle(graph)
+    except Exception:
+        pass
+    else:
+        raise Exception("Cycle found.")
+
+    normalized_graph = normalize_graph(graph)
+    used_vertexes = set()
+    sequence = []
+
+    def sort(vertex: T) -> None:
+
+        used_vertexes.add(vertex)
+
+        for child_vertex in normalized_graph[vertex]:
+
+            if child_vertex not in used_vertexes:
+                sort(child_vertex)
+
+        sequence.append(vertex)
+
+    for vertex in get_vertexes(graph):
+        if vertex not in used_vertexes:
+            sort(vertex)
+
+    return sequence
