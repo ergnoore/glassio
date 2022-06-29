@@ -1,12 +1,18 @@
-from typing import TypeVar, Optional, Any, Collection, Sequence, Mapping, List, Set, Dict, AbstractSet
-from .Graph import Graph
 from collections import defaultdict
+
+from typing import AbstractSet
 from typing import MutableSequence
-from typing import MutableMapping
+from typing import Sequence
+from typing import TypeVar
+
+from .Graph import Graph
+from .exceptions import CycleFoundException
+from .exceptions import CycleNotFoundException
 
 
 __all__ = [
-    ""
+    "get_cycle",
+    "topological_sort",
 ]
 
 
@@ -37,7 +43,7 @@ def get_cycle(graph: Graph[T]) -> Sequence[T]:
 
     def dfs(vertex: T) -> None:
         if vertex in used_vertexes:
-            raise Exception("Cycle found.")
+            raise CycleFoundException()
 
         cycle.append(vertex)
         used_vertexes.add(vertex)
@@ -53,22 +59,15 @@ def get_cycle(graph: Graph[T]) -> Sequence[T]:
 
         try:
             dfs(root)
-        except Exception:  # Cycle found.
+        except CycleFoundException:
             return cycle
 
-    raise Exception("Cycle not found.")
+    raise CycleNotFoundException()
 
 
 def topological_sort(graph: Graph[T]) -> Sequence[T]:
 
-    try:
-        get_cycle(graph)
-    except Exception:
-        pass
-    else:
-        raise Exception("Cycle found.")
-
-    normalized_graph = normalize_graph(graph)
+    normalized_reversed_graph = normalize_graph(reverse_graph(graph))
     used_vertexes = set()
     sequence = []
 
@@ -76,12 +75,13 @@ def topological_sort(graph: Graph[T]) -> Sequence[T]:
 
         used_vertexes.add(vertex)
 
-        for child_vertex in normalized_graph[vertex]:
-
+        for child_vertex in normalized_reversed_graph[vertex]:
             if child_vertex not in used_vertexes:
                 sort(child_vertex)
+            elif child_vertex not in sequence:
+                raise CycleFoundException()
 
-        sequence.append(vertex)
+        sequence.insert(0, vertex)
 
     for vertex in get_vertexes(graph):
         if vertex not in used_vertexes:

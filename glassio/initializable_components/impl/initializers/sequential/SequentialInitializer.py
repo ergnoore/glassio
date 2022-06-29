@@ -1,9 +1,9 @@
 from typing import Optional
 from typing import Sequence
 
+from ....core import InitializableComponent
 from ...abstract import AbstractInitializableComponent
-from ...core import InitializableComponent
-from ...states import InitializedState
+from ...standard import InitializedState
 
 
 __all__ = [
@@ -22,7 +22,7 @@ class SequentialInitializer(AbstractInitializableComponent):
         components: Sequence[InitializableComponent],
         name: Optional[str] = None
     ) -> None:
-        super().__init__(name)
+        super().__init__(name=name)
         self.__component_sequence = tuple(components)
 
     async def _initialize(self) -> None:

@@ -1,11 +1,12 @@
 from functools import wraps
 from inspect import iscoroutinefunction
+
 from typing import Type
 from typing import TypeVar
 
-from .core import InitializableComponent
-from .core import InitializableComponentException
-from .core import IState
+from ...core import IState
+from ...core import InitializableComponent
+from ...core import InitializableComponentException
 
 
 __all__ = [
