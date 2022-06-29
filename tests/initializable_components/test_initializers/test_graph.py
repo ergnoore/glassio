@@ -11,7 +11,7 @@ def test_graph_with_cycle() -> None:
         "B": {"A"}
     }
 
-    print(get_cycle(graph))
+    assert set(get_cycle(graph)) == {'B', 'A'}
 
 
 def test_graph_with_cycles() -> None:
