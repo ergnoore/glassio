@@ -1,4 +1,3 @@
-from typing import Literal
 from typing import Mapping
 from typing import Optional
 
@@ -14,24 +13,20 @@ __all__ = [
 
 class SettingsForPublishing(BaseModel):
     exchange_name: str
-    exchange_type: Literal["fanout", "direct", "topics", "headers"] = "direct"
-    exchange_durable: bool = False
-    exchange_passive: bool = False
-    exchange_auto_delete: bool = False
-    exchange_no_wait: bool = False
-    exchange_arguments: Mapping[str, str] = {}
-
     routing_key: str
-
-    queue_name: Optional[str] = None
-    queue_durable: bool = True
-    queue_exclusive: bool = False
-    queue_auto_delete: bool = False
+    mandatory = False
+    immediate = False
     queue_arguments: Mapping[str, str] = {}
 
 
 class SettingsForConsuming(BaseModel):
     queue_name: str
+    consumer_tag: str = ""
+    no_local: bool = False
+    no_ack: bool = False
+    exclusive: bool = False
+    no_wait: bool = False
+    arguments: Mapping[str, str] = {}
 
 
 class RabbitmqMessageBusConfig(BaseModel):
