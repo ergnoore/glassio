@@ -32,7 +32,7 @@ def normalize_graph(graph: Graph[T]) -> Graph[T]:
 
 
 def reverse_graph(graph: Graph[T]) -> Graph[T]:
-    return {vv: k for k, v in graph.items() for vv in v}
+    return {vv: {k} for k, v in graph.items() for vv in v}
 
 
 def get_cycle(graph: Graph[T]) -> Sequence[T]:
@@ -66,7 +66,6 @@ def get_cycle(graph: Graph[T]) -> Sequence[T]:
 
 
 def topological_sort(graph: Graph[T]) -> Sequence[T]:
-
     normalized_reversed_graph = normalize_graph(reverse_graph(graph))
     used_vertexes = set()
     sequence = []
