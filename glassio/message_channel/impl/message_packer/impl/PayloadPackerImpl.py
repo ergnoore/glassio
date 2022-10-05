@@ -1,7 +1,7 @@
 from typing import Optional
 from typing import Tuple
 
-from ..core import IPayloadPacker
+from ..core import IMessagePacker
 
 
 __all__ = [

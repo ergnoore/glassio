@@ -1,2 +1,2 @@
-from .core import IPayloadPacker
+from .core import IMessagePacker
 from .impl import PayloadPackerImpl

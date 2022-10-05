@@ -1,6 +1,7 @@
 from typing import Optional
 from typing import Tuple
 
+from ....core import Message
 
 __all__ = [
     "IMessagePacker",
@@ -11,8 +12,8 @@ class IMessagePacker:
 
     __slots__ = ()
 
-    def pack_payload(self, message: bytes, message_type: Optional[str] = None) -> bytes:
+    def pack_message(self, message: Message) -> bytes:
         raise NotImplementedError()
 
-    def unpack_payload(self, payload: bytes) -> Tuple[bytes, Optional[str]]:
+    def unpack_message(self, packed_message: bytes) -> Message:
         raise NotImplementedError()
