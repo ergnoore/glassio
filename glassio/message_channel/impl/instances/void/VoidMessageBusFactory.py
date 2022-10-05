@@ -27,7 +27,7 @@ class VoidMessageBusFactory(IFactory[InitializableMessageBus]):
     ) -> None:
         self.__logger = logger or get_initialized_logger()
 
-    def get_instance(
+    def __call__(
         self,
         settings: Optional[Mapping[str, Any]] = None,
     ) -> InitializableMessageBus:

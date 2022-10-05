@@ -42,7 +42,7 @@ class MemoryMessageBusFactory(IFactory[InitializableMessageBus]):
         self.__logger = logger or get_initialized_logger()
         self.__event_loop = event_loop
 
-    def get_instance(
+    def __call__(
         self,
         settings: Optional[Mapping[str, Any]] = None,
     ) -> InitializableMessageBus:

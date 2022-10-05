@@ -45,7 +45,7 @@ class EventBusFactory(IFactory[InitializableEventBus[E]]):
         self.__deserialization_exception_handler = deserialization_exception_handler or \
             StandardDeserializationExceptionHandler(logger)
 
-    def get_instance(self, settings: Optional[Mapping[str, Any]] = None) -> InitializableEventBus:
+    def __call__(self, settings: Optional[Mapping[str, Any]] = None) -> InitializableEventBus:
 
         settings = settings or {}
         config = EventBusConfig(**settings)

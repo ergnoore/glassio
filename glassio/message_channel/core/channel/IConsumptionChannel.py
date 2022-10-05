@@ -1,4 +1,5 @@
-from .MessageConsumer import MessageConsumer
+from ..message import MessageConsumer
+
 
 __all__ = [
     "IConsumptionChannel",

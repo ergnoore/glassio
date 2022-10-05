@@ -1,4 +1,4 @@
-from .Message import Message
+from ..message import Message
 
 
 __all__ = [

@@ -7,8 +7,8 @@ from glassio.logger import ILogger
 from glassio.logger import get_initialized_logger
 from glassio.mixins import IFactory
 
-from ...payload_packer import IPayloadPacker
-from ...payload_packer import PayloadPackerImpl
+from ...message_packer import IPayloadPacker
+from ...message_packer import PayloadPackerImpl
 from ....core import IMessageTypeMatcher
 from ....core import InitializableMessageBus
 
@@ -44,7 +44,7 @@ class RabbitmqMessageBusFactory(IFactory[InitializableMessageBus]):
         self.__logger = logger or get_initialized_logger()
         self.__event_loop = event_loop
 
-    def get_instance(
+    def __call__(
         self,
         settings: Optional[Mapping[str, Any]] = None,
     ) -> InitializableMessageBus:

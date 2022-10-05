@@ -3,11 +3,11 @@ from typing import Tuple
 
 
 __all__ = [
-    "IPayloadPacker",
+    "IMessagePacker",
 ]
 
 
-class IPayloadPacker:
+class IMessagePacker:
 
     __slots__ = ()
 

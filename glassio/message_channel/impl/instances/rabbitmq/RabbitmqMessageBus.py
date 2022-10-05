@@ -17,7 +17,7 @@ from glassio.logger import ILogger
 
 from .RabbitMessageBusProperties import RabbitMessageBusProperties
 from .RabbitmqMessageBusConfig import RabbitmqMessageBusConfig
-from ...payload_packer import IPayloadPacker
+from ...message_packer import IPayloadPacker
 
 from ....core import MessageConsumer
 from ....core import IMessageTypeMatcher

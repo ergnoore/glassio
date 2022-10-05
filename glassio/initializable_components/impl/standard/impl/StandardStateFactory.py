@@ -30,7 +30,7 @@ class StandardStateFactory(IStateFactory):
         self.__initialize_task = initialize_task
         self.__deinitialize_task = deinitialize_task
 
-    def get_instance(self, state_type: Type[IState]) -> IState:
+    def __call__(self, state_type: Type[IState]) -> IState:
         if issubclass(state_type, InitializingState):
             return InitializingState(
                 self.__initialize_task,

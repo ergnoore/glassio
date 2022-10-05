@@ -4,8 +4,8 @@ from glassio.initializable_components import AbstractInitializableComponent
 from glassio.logger import ILogger
 
 from ....core import MessageConsumer
-from ....core import InitializableMessageBus
-from ....core import MessageBusException
+from ....core import IMessageChannel
+from ....core import Message
 
 
 __all__ = [
@@ -13,7 +13,7 @@ __all__ = [
 ]
 
 
-class VoidMessageBus(InitializableMessageBus, AbstractInitializableComponent):
+class VoidMessageChannel(IMessageChannel):
 
     __slots__ = (
         "__logger",
@@ -28,15 +28,12 @@ class VoidMessageBus(InitializableMessageBus, AbstractInitializableComponent):
 
     async def publish(
         self,
-        message: bytes,
-        message_type: Optional[str] = None
+        message: Message,
     ) -> None:
         await self.__logger.debug(
-            "MessageBus: "
-            "message published in void: "
-            f"message: `{message}`, "
-            f"message_type: `{message_type}`."
+            "Message published in void: "
+            f"message: `{message}`."
         )
 
-    async def add_consumer(self, consumer: IConsumer) -> None:
+    async def add_consumer(self, consumer: MessageConsumer) -> None:
         pass

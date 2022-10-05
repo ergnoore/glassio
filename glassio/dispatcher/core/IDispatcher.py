@@ -55,6 +55,8 @@ class IDispatcher:
     ) -> None:
         raise NotImplementedError()
 
+    def add_function_result_handler(self) -> None:
+        raise NotImplementedError()
 
     def add_function_decorator(
         self,

@@ -17,7 +17,7 @@ class IFactory(Generic[T]):
 
     __slots__ = ()
 
-    def get_instance(
+    def __call__(
         self,
         settings: Optional[Mapping[str, Any]] = None,
     ) -> T:

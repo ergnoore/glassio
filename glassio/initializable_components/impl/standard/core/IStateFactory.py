@@ -18,6 +18,6 @@ class IStateFactory:
 
     __slots__ = ()
 
-    def get_instance(self, state_type: Type[T]) -> T:
+    def __call__(self, state_type: Type[T]) -> T:
         """Instantiate the state."""
         raise NotImplementedError()
