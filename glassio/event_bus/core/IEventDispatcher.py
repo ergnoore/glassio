@@ -1,7 +1,7 @@
 from typing import Generic
 from typing import TypeVar
 
-from glassio.message_bus import IMessageBus
+from glassio.message_channel import IMessageBus
 
 
 __all__ = [

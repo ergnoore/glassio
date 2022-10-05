@@ -19,7 +19,7 @@ from .RabbitMessageBusProperties import RabbitMessageBusProperties
 from .RabbitmqMessageBusConfig import RabbitmqMessageBusConfig
 from ...payload_packer import IPayloadPacker
 
-from ....core import IConsumer
+from ....core import MessageConsumer
 from ....core import IMessageTypeMatcher
 from ....core import InitializableMessageBus
 from ....core import MessageBusException

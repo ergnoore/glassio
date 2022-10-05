@@ -9,8 +9,8 @@ from glassio.logger import ILogger
 from glassio.logger import StandardLogger
 from glassio.logger import StandardLoggerFactory
 from glassio.logger import get_initialized_logger
-from glassio.message_bus import IMessageBus
-from glassio.message_bus import MemoryMessageBusFactory
+from glassio.message_channel import IMessageBus
+from glassio.message_channel import MemoryMessageBusFactory
 
 
 @pytest_asyncio.fixture

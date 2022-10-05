@@ -2,7 +2,7 @@ from typing import Mapping
 
 from pydantic import BaseModel
 
-from glassio.message_bus import IMessageBus
+from glassio.message_channel import IMessageBus
 
 
 __all__ = [

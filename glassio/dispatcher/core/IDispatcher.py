@@ -39,13 +39,22 @@ class IDispatcher:
     def get_function_types(self) -> Collection[Type[IFunction]]:
         raise NotImplementedError()
 
-    async def call_function(
+    async def sync_call_function(
         self,
         function_type: Type[F],
         args: Optional[Sequence[Any]] = None,
         kwargs: Optional[Mapping[str, Any]] = None,
     ) -> Any:
         raise NotImplementedError()
+
+    async def async_call_function(
+        self,
+        function_type: Type[F],
+        args: Optional[Sequence[Any]] = None,
+        kwargs: Optional[Mapping[str, Any]] = None,
+    ) -> None:
+        raise NotImplementedError()
+
 
     def add_function_decorator(
         self,

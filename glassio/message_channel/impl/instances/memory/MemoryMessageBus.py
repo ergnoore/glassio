@@ -18,7 +18,7 @@ from glassio.initializable_components import InitializedState
 from glassio.initializable_components import required_state
 from glassio.logger import ILogger
 
-from ....core import IConsumer
+from ....core import MessageConsumer
 from ....core import IMessageTypeMatcher
 from ....core import InitializableMessageBus
 

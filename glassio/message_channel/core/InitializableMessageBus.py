@@ -2,7 +2,7 @@ from abc import ABC
 
 from glassio.initializable_components import InitializableComponent
 
-from .IMessageBus import IMessageBus
+from .IMessageChannel import IMessageChannel
 
 
 __all__ = [
@@ -10,6 +10,6 @@ __all__ = [
 ]
 
 
-class InitializableMessageBus(IMessageBus, InitializableComponent, ABC):
+class InitializableMessageBus(IMessageChannel, InitializableComponent, ABC):
 
     __slots__ = ()

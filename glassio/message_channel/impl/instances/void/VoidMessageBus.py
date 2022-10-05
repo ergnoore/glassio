@@ -3,7 +3,7 @@ from typing import Optional
 from glassio.initializable_components import AbstractInitializableComponent
 from glassio.logger import ILogger
 
-from ....core import IConsumer
+from ....core import MessageConsumer
 from ....core import InitializableMessageBus
 from ....core import MessageBusException
 
