@@ -1,21 +1,28 @@
 from typing import Optional
 from typing import Tuple
 
+from glassio.message_channel import Message
 from ..core import IMessagePacker
 
 
 __all__ = [
-    "PayloadPackerImpl",
+    "MessagePackerImpl",
 ]
 
 
-class PayloadPackerImpl(IPayloadPacker):
+class MessagePackerImpl(IMessagePacker):
 
     __slots__ = ()
 
     __ENCODING = "utf-8"
     __MAX_MESSAGE_TYPE_LENGTH = 256 * 256 - 1
     __HEADERS_LENGTH = 1 + 2
+
+    def pack_message(self, message: Message) -> bytes:
+        message.headers
+
+    def unpack_message(self, packed_message: bytes) -> Message:
+        pass
 
     def pack_payload(self, message: bytes, message_type: Optional[str] = None) -> bytes:
         if message_type is None:

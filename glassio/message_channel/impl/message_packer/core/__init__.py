@@ -1,1 +1,1 @@
-from .IMessagePacker import IPayloadPacker
+from .IMessagePacker import IMessagePacker

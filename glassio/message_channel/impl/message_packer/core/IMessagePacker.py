@@ -1,7 +1,5 @@
-from typing import Optional
-from typing import Tuple
-
 from ....core import Message
+
 
 __all__ = [
     "IMessagePacker",

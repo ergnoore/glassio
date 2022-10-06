@@ -1,3 +1,5 @@
+from typing import Any
+from typing import Mapping
 from typing import Union
 
 
@@ -21,8 +23,10 @@ class Message:
         self.__headers = headers
         self.__body = body
 
+    @property
     def headers(self) -> Mapping[str, Any]:
         return self.__headers
 
+    @property
     def body(self) -> Union[str, bytes]:
         return self.__body
