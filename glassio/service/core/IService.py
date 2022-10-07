@@ -18,11 +18,11 @@ class IService(IStartable, ABC):
     __slots__ = ()
 
     @property
-    def instance_id(self) -> Union[UUID, str, int]:
+    def name(self) -> str:
         raise NotImplementedError()
 
     @property
-    def name(self) -> str:
+    def instance_id(self) -> Union[UUID, str, int]:
         raise NotImplementedError()
 
     @property
@@ -30,9 +30,5 @@ class IService(IStartable, ABC):
         raise NotImplementedError()
 
     @property
-    def event_bus(self) -> IEventBus:
-        raise NotImplementedError()
-
-    @property
-    def dispatcher(self) -> IDispatcher:
+    def container(self) -> IEventBus:
         raise NotImplementedError()

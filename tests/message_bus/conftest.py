@@ -3,9 +3,9 @@ from typing import Literal
 import pytest
 import pytest_asyncio
 
-from glassio.message_channel import InitializableMessageBus
-from glassio.message_channel import MemoryMessageBusFactory
-from glassio.message_channel import RabbitmqMessageBusFactory
+from glassio.messaging import InitializableMessageBus
+from glassio.messaging import MemoryMessageBusFactory
+from glassio.messaging import RabbitmqMessageBusFactory
 
 
 def get_message_bus_by_name(name: Literal["rabbitmq", "memory"]) -> InitializableMessageBus:

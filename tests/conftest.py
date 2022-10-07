@@ -6,11 +6,9 @@ import pytest_asyncio
 from glassio.dispatcher import IDispatcher
 from glassio.dispatcher import LocalDispatcher
 from glassio.logger import ILogger
-from glassio.logger import StandardLogger
 from glassio.logger import StandardLoggerFactory
-from glassio.logger import get_initialized_logger
-from glassio.message_channel import IMessageBus
-from glassio.message_channel import MemoryMessageBusFactory
+from glassio.messaging import IMessageBus
+from glassio.messaging import MemoryMessageBusFactory
 
 
 @pytest_asyncio.fixture

@@ -20,5 +20,4 @@ __all__ = [
     "InitializableLogger",
     "StandardLogger",
     "StandardLoggerFactory",
-    "get_initialized_logger",
 ]

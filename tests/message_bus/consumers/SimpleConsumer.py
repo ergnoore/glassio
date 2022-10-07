@@ -1,6 +1,6 @@
 from typing import Optional
 
-from glassio.message_channel import IConsumer
+from glassio.messaging import IConsumer
 
 
 __all__ = [

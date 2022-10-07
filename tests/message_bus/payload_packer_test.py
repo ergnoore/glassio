@@ -1,7 +1,7 @@
 import pytest
 
-from glassio.message_channel import IPayloadPacker
-from glassio.message_channel import PayloadPackerImpl
+from glassio.messaging import IPayloadPacker
+from glassio.messaging import PayloadPackerImpl
 
 
 @pytest.fixture()

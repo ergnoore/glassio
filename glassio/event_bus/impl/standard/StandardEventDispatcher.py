@@ -3,7 +3,7 @@ from typing import Optional
 from typing import Type
 from typing import TypeVar
 
-from glassio.message_channel import IMessageBus
+from glassio.messaging import IMessageBus
 
 from ...core import EventDispatchingException
 from ...core import IEventDispatcher
