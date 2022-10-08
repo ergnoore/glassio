@@ -1,6 +1,5 @@
 from typing import Any
 from typing import Mapping
-from typing import Union
 
 
 __all__ = [
@@ -18,7 +17,7 @@ class Message:
     def __init__(
         self,
         headers: Mapping[str, Any],
-        body: Union[str, bytes]
+        body: bytes
     ) -> None:
         self.__headers = headers
         self.__body = body
@@ -28,7 +27,7 @@ class Message:
         return self.__headers
 
     @property
-    def body(self) -> Union[str, bytes]:
+    def body(self) -> bytes:
         return self.__body
 
     def __repr__(self) -> str:

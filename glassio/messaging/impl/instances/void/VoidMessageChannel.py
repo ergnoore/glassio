@@ -31,5 +31,8 @@ class VoidMessageChannel(IMessageChannel):
             f"Message published in void: message: `{message}`."
         )
 
-    async def add_consumer(self, consumer: MessageConsumer) -> None:
+    async def set_consumer(self, consumer: MessageConsumer) -> None:
+        pass
+
+    async def pop_consumer(self) -> None:
         pass

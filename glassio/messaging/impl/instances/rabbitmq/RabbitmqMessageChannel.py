@@ -3,7 +3,7 @@ from asyncio import BaseTransport
 from asyncio import Lock
 from asyncio import get_event_loop
 from typing import Optional
-
+from asyncio import get_running_loop
 from aioamqp import connect
 from aioamqp.channel import Channel
 from aioamqp.envelope import Envelope
@@ -15,27 +15,24 @@ from glassio.initializable_components import InitializedState
 from glassio.initializable_components import required_state
 from glassio.logger import ILogger
 
-from .RabbitMessageChannelProperties import RabbitMessageChannelProperties
-from .RabbitmqMessageChannelConfig import RabbitmqMessageChannelConfig
-from ...message_packer import IPayloadPacker
+from ...message_packer import IMessagePacker
 
 from ....core import MessageConsumer
-from ....core import IMessageTypeMatcher
-from ....core import InitializableMessageChannel
+from ....core import Message
 from ....core import MessageChannelException
 from ....core import PublicationException
-
+from .RabbitMQMessageChannelConfig import RabbitMQMessageChannelConfig
 
 __all__ = [
     "RabbitmqMessageChannel",
 ]
 
 
-class RabbitmqMessageChannel(AbstractInitializableComponent, InitializableMessageChannel):
+class RabbitMQMessageChannel(AbstractInitializableComponent, IMessagePacker):
 
     __slots__ = (
         "__config",
-        "__payload_packer",
+        "__message_packer",
         "__message_type_matcher",
         "__event_loop",
         "__logger",
@@ -47,16 +44,14 @@ class RabbitmqMessageChannel(AbstractInitializableComponent, InitializableMessag
 
     def __init__(
         self,
-        config: RabbitmqMessageChannelConfig,
-        payload_packer: IPayloadPacker,
-        message_type_matcher: IMessageTypeMatcher[RabbitMessageChannelProperties],
+        config: RabbitMQMessageChannelConfig,
+        message_packer: IMessagePacker,
         logger: ILogger,
         event_loop: Optional[AbstractEventLoop] = None,
     ) -> None:
-        super().__init__()
+        super().__init__(name="RabbitMQMessageChannel")
         self.__config = config
-        self.__payload_packer = payload_packer
-        self.__message_type_matcher = message_type_matcher
+        self.__message_packer = message_packer
         self.__logger = logger
         self.__event_loop = event_loop
 
@@ -80,16 +75,14 @@ class RabbitmqMessageChannel(AbstractInitializableComponent, InitializableMessag
 
     async def _initialize(self) -> None:
         if self.__event_loop is None:
-            self.__event_loop = get_event_loop()
+            self.__event_loop = get_running_loop()
 
         await self.__connect()
-
-        if self.__config.settings_for_publishing is None:
-            return
 
     async def __disconnect(self) -> None:
         if self.__protocol is not None:
             await self.__protocol.close()
+
         if self.__transport is not None:
             self.__transport.close()
 
@@ -97,19 +90,14 @@ class RabbitmqMessageChannel(AbstractInitializableComponent, InitializableMessag
         await self.__disconnect()
 
     @required_state(InitializedState)
-    async def publish(
-        self,
-        message: bytes,
-        message_type: Optional[str] = None,
-    ) -> None:
-
-        properties = self.__message_type_matcher.match(message_type)
-        payload = self.__payload_packer.pack_payload(message, message_type)
+    async def publish(self, message: Message) -> None:
 
         if self.__config.settings_for_publishing is None:
             raise MessageChannelException(
                 "To publish a message, you need to specify the `exchange_name`."
             )
+
+        payload = self.__message_packer.pack_message(message)
 
         try:
             await self.__channel.basic_publish(
@@ -121,18 +109,14 @@ class RabbitmqMessageChannel(AbstractInitializableComponent, InitializableMessag
                 immediate=self.__config.settings_for_publishing.immediate,
             )
         except Exception as e:
-            raise PublicationException(message, message_type) from e
+            raise PublicationException(message) from e
 
         await self.__logger.debug(
-            "MessageChannel: "
-            "message published "
-            f"message: `{message}`, "
-            f"message_type: `{message_type}`. "
-            f"RabbitMQ properties: `{properties}`."
+            f"Message published message: `{message}`."
         )
 
     @required_state(InitializedState)
-    async def add_consumer(self, consumer: IConsumer) -> None:
+    async def set_consumer(self, consumer: MessageConsumer) -> None:
 
         if self.__config.settings_for_consuming is None:
             raise MessageChannelException(
@@ -147,10 +131,10 @@ class RabbitmqMessageChannel(AbstractInitializableComponent, InitializableMessag
         ) -> None:
             nonlocal consumer
 
-            message, message_type = self.__payload_packer.unpack_payload(body)
+            message = self.__message_packer.unpack_message(body)
 
             try:
-                await consumer(message, message_type)
+                await consumer(message)
             except Exception as e:
                 await self.__logger.warning(
                     "MessageChannel: "
@@ -170,7 +154,7 @@ class RabbitmqMessageChannel(AbstractInitializableComponent, InitializableMessag
                 f"message_type: `{message_type}`."
             )
 
-        await self.__channel.basic_consume(
+        await self.__ch annel.basic_consume(
             callback=consumer_wrapper,
             queue_name=self.__config.settings_for_consuming.queue_name,
             consumer_tag=self.__config.settings_for_consuming.consumer_tag,
@@ -180,3 +164,5 @@ class RabbitmqMessageChannel(AbstractInitializableComponent, InitializableMessag
             no_wait=self.__config.settings_for_consuming.no_wait,
             arguments=self.__config.settings_for_consuming.arguments,
         )
+
+        self.__channel.cons

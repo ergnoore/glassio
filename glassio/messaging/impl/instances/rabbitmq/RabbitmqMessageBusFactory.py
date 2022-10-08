@@ -26,7 +26,7 @@ __all__ = [
 class RabbitmqMessageChannelFactory(IFactory[InitializableMessageChannel]):
 
     __slots__ = (
-        "__payload_packer",
+        "__message_packer",
         "__message_type_matcher",
         "__logger",
         "__event_loop",
@@ -34,12 +34,12 @@ class RabbitmqMessageChannelFactory(IFactory[InitializableMessageChannel]):
 
     def __init__(
         self,
-        payload_packer: Optional[IPayloadPacker] = None,
+        message_packer: Optional[IPayloadPacker] = None,
         message_type_matcher: Optional[IMessageTypeMatcher[RabbitMessageChannelProperties]] = None,
         logger: Optional[ILogger] = None,
         event_loop: Optional[AbstractEventLoop] = None,
     ) -> None:
-        self.__payload_packer = payload_packer or PayloadPackerImpl()
+        self.__message_packer = message_packer or PayloadPackerImpl()
         self.__message_type_matcher = message_type_matcher or DefaultMessageTypeMatcher()
         self.__logger = logger or get_initialized_logger()
         self.__event_loop = event_loop
@@ -54,7 +54,7 @@ class RabbitmqMessageChannelFactory(IFactory[InitializableMessageChannel]):
 
         message_channel = RabbitmqMessageChannel(
             config=config,
-            payload_packer=self.__payload_packer,
+            message_packer=self.__message_packer,
             message_type_matcher=self.__message_type_matcher,
             logger=self.__logger,
             event_loop=self.__event_loop,

@@ -106,7 +106,7 @@ class MemoryMessageChannel(InitializableMessageChannel, AbstractInitializableCom
         )
 
     @required_state(InitializedState)
-    async def add_consumer(self, consumer: IConsumer) -> None:
+    async def set_consumer(self, consumer: IConsumer) -> None:
         self.__consumers.append(consumer)
         # Set the future for `__get_consumer` method.
         if not self.__consumer_added.done():

@@ -55,6 +55,7 @@ class MessagePackerImpl(IMessagePacker):
             byteorder="big",
             signed=False
         )
+
         return headers_length_bytes + encoded_headers + message.body
 
     def unpack_message(self, packed_message: bytes) -> Message:

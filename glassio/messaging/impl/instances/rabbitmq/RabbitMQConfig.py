@@ -1,4 +1,5 @@
 from pydantic import BaseModel
+from pydantic import Field
 
 
 __all__ = [
@@ -8,7 +9,7 @@ __all__ = [
 
 class RabbitMQConfig(BaseModel):
     host: str = "127.0.0.1"
-    port: int = 5672
+    port: int = Field(5672, gt=0, lt=65536)
     login: str = "guest"
     password: str = "guest"
     virtualhost: str = '/'
