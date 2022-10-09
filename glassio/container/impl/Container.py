@@ -4,16 +4,16 @@ from typing import MutableMapping
 from typing import Optional
 from typing import TypeVar
 
-from asterisk_ng.system.chest.core.IResolver import IResolver
-from asterisk_ng.system.chest.core.Key import Key
-from asterisk_ng.system.chest.core.exceptions import ResolverNotFound
-from asterisk_ng.system.chest.core.exceptions import UnableToResolveDependency
+from ..core import IResolver
+from ..core import Key
+from ..core import ResolverNotFound
+from ..core import UnableToResolveDependency
 
 
 T = TypeVar('T')
 
 
-class Chest(Generic[T]):
+class Container(Generic[T]):
 
     __slots__ = (
         "__resolvers",

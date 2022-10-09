@@ -2,8 +2,7 @@ from abc import ABC
 from typing import Union
 from uuid import UUID
 
-from glassio.dispatcher import IDispatcher
-from glassio.event_bus import IEventBus
+from glassio.container import Container
 from glassio.mixins import IStartable
 from glassio.utils import Version
 
@@ -30,5 +29,5 @@ class IService(IStartable, ABC):
         raise NotImplementedError()
 
     @property
-    def container(self) -> IEventBus:
+    def container(self) -> Container:
         raise NotImplementedError()

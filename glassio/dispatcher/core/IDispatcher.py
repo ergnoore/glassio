@@ -1,12 +1,7 @@
-from typing import Any
-from typing import Mapping
-from typing import Optional
-from typing import Sequence
 from typing import Type
 from typing import TypeVar
-from typing import Collection
+from typing import Union
 
-from .decorators import IFunctionDecorator
 from .functions import IFunction
 
 
@@ -24,39 +19,20 @@ class IDispatcher:
 
     def add_function(
         self,
-        function_type: Type[F],
+        alias: Union[Type[F], str],
         function: F,
-        forced: bool = False,
+        public: bool = True
     ) -> None:
         raise NotImplementedError()
 
-    def delete_function(self, function_type: Type[F]) -> None:
-        raise NotImplementedError()
-
-    def get_function(self, function_type: Type[F]) -> F:
-        raise NotImplementedError()
-
-    def get_function_types(self) -> Collection[Type[IFunction]]:
-        raise NotImplementedError()
-
-    async def call_function(
+    def get_function(
         self,
-        function_type: Type[F],
-        args: Optional[Sequence[Any]] = None,
-        kwargs: Optional[Mapping[str, Any]] = None,
-    ) -> Any:
+        alias: Union[Type[F], str]
+    ) -> F:
         raise NotImplementedError()
 
-    def add_function_decorator(
+    def delete_function(
         self,
-        function: Type[IFunction],
-        decorator: IFunctionDecorator,
-    ) -> None:
-        raise NotImplementedError()
-
-    def delete_function_decorator(
-        self,
-        function: Type[IFunction],
-        decorator: IFunctionDecorator,
+        alias: Union[Type[F], str]
     ) -> None:
         raise NotImplementedError()

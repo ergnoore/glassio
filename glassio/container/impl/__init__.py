@@ -1,1 +1,2 @@
-from .Chest import Chest
+from .Container import Container
+from .standard import SingletonResolver
