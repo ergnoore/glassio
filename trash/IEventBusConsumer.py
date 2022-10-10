@@ -2,7 +2,7 @@ from typing import Collection
 from typing import Generic
 from typing import TypeVar
 
-from .IEventHandler import IEventHandler
+from .EventHandler import IEventHandler
 
 
 __all__ = [

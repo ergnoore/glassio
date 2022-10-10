@@ -1,4 +1,5 @@
-ps = 95
+class EventDomain:
+    pass
 
-r = list(range(0, ps, 10))
-print(r)
+
+print(EventDomain.__name__)

@@ -1,8 +1,13 @@
-from typing import Generic
-from typing import Optional
-from typing import TypeVar
+from abc import ABC
 
-from .IEventHandler import IEventHandler
+from typing import Generic
+from typing import TypeVar
+from typing import Union
+
+from glassio.initializable_components import InitializableComponent
+
+from .EventHandler import EventHandler
+from .ISubscription import ISubscription
 
 
 __all__ = [
@@ -13,33 +18,19 @@ __all__ = [
 E = TypeVar('E')
 
 
-class IEventBus(Generic[E]):
-
-    """Event Bus."""
+class IEventBus(Generic[E], InitializableComponent, ABC):
 
     __slots__ = ()
 
     async def publish(self, event: E) -> None:
-        """Publish an event."""
         raise NotImplementedError()
 
-    async def attach_event_handler(
+    def subscribe(
         self,
-        event_handler: IEventHandler[E],
-        event_type: Optional[E] = None,
-    ) -> None:
-        """
-        :raise AttributeError: If handler missing event annotation.
-        """
+        event_alias: Union[Type[E], str],
+        event_handler: EventHandler,
+    ) -> ISubscription:
         raise NotImplementedError()
 
-    async def detach_event_handler(
-        self,
-        event_handler: IEventHandler[E],
-        event_type: Optional[E] = None,
-    ) -> None:
-        """
-        :raise AttributeError: If handler missing event annotation.
-        :raise HandlerIsNotAttachedException:
-        """
+    def cancel_subscription(self, subscription: ISubscription) -> None:
         raise NotImplementedError()

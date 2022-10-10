@@ -1,15 +1,19 @@
 from typing import Optional
 from typing import TypeVar
 
+from glassio.initializable_components import InitializedState
+from glassio.initializable_components import required_state
+
 from glassio.logger import ILogger
 
-from .abstract import AbstractInitializableEventBus
-from .EventBusConfig import EventBusConfig
+from glassio.messaging import IConsumptionChannel
+from glassio.messaging import IPublicationChannel
+from glassio.messaging import Message
 
-from ..core import IDeserializationExceptionHandler
-from ..core import IEventBusConsumer
-from ..core import IEventDispatcher
-from ..core import IEventSerializer
+from .abstract import AbstractEventBus
+from .IEventToMessageConverter import IEventToMessageConverter
+from ..core import EventBusException
+from ..core import EventHandler
 
 
 __all__ = [
@@ -20,69 +24,69 @@ __all__ = [
 E = TypeVar('E')
 
 
-class EventBusImpl(AbstractInitializableEventBus[E]):
+class EventBusImpl(AbstractEventBus[E]):
 
     __slots__ = (
-        "__config",
-        "__event_dispatcher",
-        "__event_serializer",
-        "__consumer",
-        "__deserialization_exception_handler",
+        "__publication_channel",
+        "__consumption_channel",
+        "__event_to_message_converter",
+        "__reject_if_no_handlers",
         "__logger",
     )
 
     def __init__(
         self,
-        config: EventBusConfig,
-        event_dispatcher: IEventDispatcher[E],
-        event_serializer: IEventSerializer[E],
-        consumer: IEventBusConsumer[E],
-        deserialization_exception_handler: IDeserializationExceptionHandler,
+        publication_channel: IPublicationChannel,
+        consumption_channel: IConsumptionChannel,
+        event_to_message_converter: IEventToMessageConverter[E],
         logger: ILogger,
+        reject_if_no_handlers: bool = True,
     ) -> None:
         super().__init__()
-        self.__config = config
-        self.__event_dispatcher = event_dispatcher
-        self.__event_serializer = event_serializer
-        self.__consumer = consumer
-        self.__deserialization_exception_handler = deserialization_exception_handler
+        self.__publication_channel = publication_channel
+        self.__consumption_channel = consumption_channel
+        self.__event_to_message_converter = event_to_message_converter
+        self.__reject_if_no_handlers = reject_if_no_handlers
         self.__logger = logger
 
-    async def publish(self, event: E) -> None:
-        target_message_bus = await self.__event_dispatcher.dispatch(event)
-        message, message_type = self.__event_serializer.serialize(event)
+    @required_state(InitializedState)
+    async def publish(self, event: E, event_name: Optional[str] = None) -> None:
+        event_name = event_name or event.__class__.__name__
+        message = self.__event_to_message_converter.to_message(event_name, event)
 
-        await target_message_bus.publish(
-            message=message,
-            message_type=message_type,
-        )
-        await self.__logger.debug(
-            f"EventBus: publish event: `{event}` "
-            f"in message_bus: `{target_message_bus}`."
-        )
-
-    async def __consumer_wrapper(self, message: bytes, message_type: Optional[str]) -> None:
-        try:
-            event = self.__event_serializer.deserialize(message, message_type)
-            if event is None:
-                raise TypeError(
-                    "Event must be object, not None."
-                )
-        except Exception as exc:
-            await self.__deserialization_exception_handler(message, message_type, exc)
-            return
-
-        handlers = self._get_handlers(event_type=type(event))
-        try:
-            await self.__consumer(event, handlers)
-        except Exception as exc:
-            await self.__logger.error(
-                "Error during operation of the event consumer.",
-                exception=exc,
-            )
-            raise exc
+        await self.__publication_channel.publish(message=message)
+        await self.__logger.debug(f"Event published: `{event}`.")
 
     async def _initialize(self) -> None:
-        for message_bus, number_of_consumers in self.__config.number_of_consumers.items():
-            for _ in range(number_of_consumers):
-                await message_bus.add_consumer(self.__consumer_wrapper)
+        await self.__consumption_channel.set_consumer(self.__message_consumer)
+
+    async def _deinitialize(self, exception: Optional[Exception] = None) -> None:
+        await self.__consumption_channel.pop_consumer()
+
+    async def __call_handler(self, handler: EventHandler, event: E) -> None:
+        try:
+            await handler(event)
+        except Exception as e:
+            await self.__logger.error(
+                f"Error during handler call.",
+                exception=e,
+            )
+
+    async def __message_consumer(self, message: Message) -> None:
+        try:
+            event_name, event = self.__event_to_message_converter.from_message(message)
+            if event is None:
+                raise TypeError("Event must be object, not None.")
+        except Exception as exc:
+            raise EventBusException("Error converting a message into an event.") from exc
+
+        handlers = self.__handlers[event_name]
+
+        if len(handlers) and self.__reject_if_no_handlers:
+            raise EventBusException("There are no handlers for the event.")
+
+        for handler in handlers:
+            self.__event_loop.create_task(
+                self.__call_handler(handler, event),
+                name="EventHandler."
+            )
