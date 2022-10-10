@@ -154,7 +154,7 @@ class RabbitMQMessageChannel(AbstractInitializableComponent, IMessagePacker):
                 f"message_type: `{message_type}`."
             )
 
-        await self.__ch annel.basic_consume(
+        await self.__channel.basic_consume(
             callback=consumer_wrapper,
             queue_name=self.__config.settings_for_consuming.queue_name,
             consumer_tag=self.__config.settings_for_consuming.consumer_tag,

@@ -3,6 +3,7 @@ from abc import ABC
 from typing import Generic
 from typing import TypeVar
 from typing import Union
+from typing import Type
 
 from glassio.initializable_components import InitializableComponent
 
